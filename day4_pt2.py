@@ -72,17 +72,22 @@ def main():
 	print(draws)
 	print(boards)
 
-	i = 0
 	for draw in draws:
 		print(draw)
 		boards = update_boards(boards, draw)
-		print(boards)
-		bingo_board = check_bingo(boards)
-		print(bingo_board)
-		if bingo_board != -1:
-			print(calculate_sum_not_called(boards[bingo_board]) * draw)
-			break
-		i += 1
+		# print(boards)
+		winning_bingo_board = check_bingo(boards)
+		# print(winning_bingo_board)
+		while winning_bingo_board != -1:
+			if len(boards) > 1:
+				print(winning_bingo_board)
+				print(boards.pop(winning_bingo_board))
+				winning_bingo_board = check_bingo(boards)
+			else:
+				print(calculate_sum_not_called(boards[winning_bingo_board]) * draw)
+				return
+
+		
 		
 		
 	
