@@ -1,27 +1,16 @@
 from copy import deepcopy
 
-def dedupe_coords(coords):
-    deduped = []
-    for i in range(len(coords)):
-        dupe = False
-        for j in range(len(deduped)):
-            if coords[i][0] == deduped[j][0] and coords[i][1] == deduped[j][1]:
-                dupe = True
-        if not dupe:
-            deduped.append(coords[i])
-    return deduped
-
 def fold_across_horizontal_line(coords, y_pos):
     translated_coords = []
     for c in coords:
         if c[0] > y_pos:
             # needs folding
             new_y_pos = y_pos - (c[0]-y_pos)
-            translated_coords.append([new_y_pos, c[1]])
+            translated_coords.append((new_y_pos, c[1]))
         else:
-            translated_coords.append([c[0],c[1]])
+            translated_coords.append((c[0],c[1]))
 
-    return dedupe_coords(translated_coords)
+    return list(set(translated_coords))
 
 def fold_across_vertical_line(coords, x_pos):
     translated_coords = []
@@ -29,11 +18,11 @@ def fold_across_vertical_line(coords, x_pos):
         if c[1] > x_pos:
             # needs folding
             new_x_pos = x_pos - (c[1]-x_pos)
-            translated_coords.append([c[0],new_x_pos])
+            translated_coords.append((c[0],new_x_pos))
         else:
-            translated_coords.append([c[0],c[1]])
+            translated_coords.append((c[0],c[1]))
 
-    return dedupe_coords(translated_coords)
+    return list(set(translated_coords))
 
 def fold_across_line(coords, fold):
     # fold is in format 'fold along y=7'
@@ -75,7 +64,8 @@ def main():
         elif 'fold' in l:
             folds.append(l.strip())
         else:
-            coords.append([int(x) for x in l.strip().split(',')])
+            coord = [int(x) for x in l.strip().split(',')]
+            coords.append((coord[0], coord[1]))
 
     print(coords)
     print(folds)
