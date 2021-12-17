@@ -1,3 +1,4 @@
+from copy import deepcopy
 import heapq as hq
 
 def get_min_risk(r1, r2):
@@ -39,10 +40,37 @@ def find_lowest_risk_path(grid):
                     memoized_grid[r][c] = get_min_risk(min_risk + grid[r][c],memoized_grid[r][c])
                     if old_value != memoized_grid[r][c]:
                         had_updates = True
-        # for r in memoized_grid:
-            # print('\t'.join([str(x) for x in r]))
-        # print(' ')
     return memoized_grid[len(grid)-1][len(grid[0])-1]
+
+def increment_grid_val(val):
+    if val + 1 > 9:
+        return 1
+    return val + 1
+
+def make_grid_from_tile(tile):
+    grid = []
+    for row in range(5 * len(tile)):
+        grid_row = []
+        for col in range(5 * len(tile[0])):
+            if row >= len(tile):
+                # not in top row of tiles, so add one to the values found in
+                # the tile above.
+                prev_val = grid[row - len(tile)][col]
+                grid_row.append(increment_grid_val(prev_val))
+            elif col >= len(tile[0]):
+                # not in the leftmost column of tiles, so add one to the values
+                # found in the tile to the left.
+                prev_val = grid_row[col - len(tile[0])]
+                grid_row.append(increment_grid_val(prev_val))
+            else:
+                # this is the top left tile
+                grid_row.append(tile[row][col])
+        grid.append(grid_row)
+    return grid
+
+def find_lowest_risk_path_for_tile(tile):
+    tiled_grid = make_grid_from_tile(tile)
+    return find_lowest_risk_path(tiled_grid)
 
 def main():
     with open('input.txt', 'r') as f:
@@ -52,7 +80,7 @@ def main():
     for l in lines:
         grid.append([int(x) for x in l])
 
-    print(find_lowest_risk_path(grid))
+    print(find_lowest_risk_path_for_tile(grid))
 
 if __name__ == "__main__":
 	main()
