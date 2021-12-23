@@ -22,18 +22,6 @@ def parse_step(step):
     coord_bounds = [[int(x) for x in coords[2:].split('..')] for coords in coords_str.split(',')]
     return setting, coord_bounds
 
-# def is_valid_index(cube, coord):
-#     x = coord[0]
-#     y = coord[1]
-#     z = coord[2]
-#     if x < 0 or x >= len(cube):
-#         return False
-#     if y < 0 or y >= len(cube[0]):
-#         return False
-#     if z < 0 or z >= len(cube[0][0]):
-#         return False
-#     return True
-
 def count_on_cubes(cube_space):
     count = 0
     for x in range(len(cube_space)):
