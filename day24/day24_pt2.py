@@ -30,7 +30,7 @@ def process_instructions(instructions):
                     new_alu = tuple(alu_with_inp)
                     new_digit_series = num * 10 + i
                     if new_alu in new_alus.keys():
-                        new_alus[new_alu] = max(new_digit_series, new_alus[new_alu])
+                        new_alus[new_alu] = min(new_digit_series, new_alus[new_alu])
                     else:
                         new_alus[new_alu] = new_digit_series
             else:
@@ -58,11 +58,15 @@ def process_instructions(instructions):
                         new_alus[new_alu] = num
         alus = new_alus
         print('instruction', j)
-    max_digits = 0
+    min_digits = None
     for alu, digits in alus.items():
         if alu[ALU_MAPPINGS['z']] == 0:
-            max_digits = max(max_digits, digits)
-    return max_digits
+            if min_digits is None:
+                min_digits = digits
+            else:
+                min_digits = min(min_digits, digits)
+            print(alu, digits)
+    return min_digits
 
 def solve(input_lines):
     instructions = [line.strip().split(' ') for line in input_lines]
